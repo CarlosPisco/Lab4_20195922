@@ -60,7 +60,7 @@
 
 
 
-    <div th:each="vuelo ,vestado: ${listaVuelo}">
+    <div>
 
       <div class="row">
         <div class="col-2"></div>
@@ -83,20 +83,47 @@
         <div class="col-sm-6 mt-2 ml-2 mb-4">
           <div class="card text-center border-white">
             <div class="card-body">
-              <h5 class="card-title mt-3" th:text="${vuelo.origen}>Lima - Bogota <b>($120.00)</b> </h5>
 
-              <p class="text-success"> <b>Star Peru - 2I</b> </p>
-              <p th:text="${vuelo.aerolineaIdaerolinea.nombre} ></p>
-
-
-              <p th:text="${vuelo.descripcion}"></p>
-              <button class="btn btn-success btn-lg btn-block">Comprar</button>
-            </div>
           </div>
         </div>
       </div>
 
     </div>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>pais de origen</th>
+          <th>pais de destino</th>
+          <th>Aerolinea</th>
+          <th>Descripcion</th>
+
+          <th></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vuelo ,vestado: ${listaVuelo}">
+          <!-- Completar -->
+          <!-- Completar -->
+          <!-- Completar -->
+          <!-- Completar -->
+          <td th:text="${vestado.index+1}"></td>
+          <td th:text="${vuelo.getOrigen()}"></td>
+          <td th:text="${vuelo.getDestino()}"></td>
+          <td th:text="${vuelo.getAerolineaIdaerolinea().nombre}"></td>
+          <td th:text="${vuelo.descripcion}"></td>
+
+
+          <td><a class="btn btn-primary" th:href="@{'/hospital/paci?id='+${vuelo.id}}">Comprar</a></td>
+
+        </tr>
+        </tbody>
+      </table>
+
+
+
 
   </div>
 
