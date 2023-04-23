@@ -11,20 +11,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
 public class MainController {
 
-    @Autowired
+
     UserRepository userRepository;
 
-    @Autowired
+
     VueloRepository vueloRepository;
 
-    public MainController(UserRepository userRepository) {
+    public MainController(UserRepository userRepository, VueloRepository vueloRepository) {
         this.userRepository = userRepository;
+        this.vueloRepository = vueloRepository;
     }
 
     @GetMapping("/inicio")
@@ -36,14 +38,17 @@ public class MainController {
 
 
     @PostMapping("/credenciales")
-    public String guardarJuegos(@RequestParam("correo") String correo,
-                                @RequestParam ("contrasena") String contrasena){
+    public String verifyInicio(@RequestParam("correo") String correo,
+                                @RequestParam ("contrasena") String contrasena,
+                                RedirectAttributes attr){
 
 
 
         User user = userRepository.buscarUserLogin(correo,contrasena);
 
         if(user!=null){
+            attr.addFlashAttribute("correo",correo);
+
             return "redirect:/homepage";
         }else {
             return "redirect:/inicio";
@@ -63,8 +68,27 @@ public class MainController {
     }
 
 
+    @PostMapping("/reservar")
+    public String reservarVueloUser(@RequestParam("correo") String correo,
+                                    @RequestParam("idvuelo") Integer idvuelo,
+                                    @RequestParam("precio") Integer precio,
+                                    RedirectAttributes attr ) {
+
+        //List<Shipper> lista = shipperRepository.findByCompanyNameOrPhone(textoBuscar, textoBuscar);
+        Integer id =  userRepository.obtenerUserByCorreo(correo);
+        userRepository.reservarVuelo(precio,id,idvuelo);
+        attr.addFlashAttribute("correo",correo);
+        attr.addFlashAttribute("msg","Se realizo con exito su reserva.");
+
+        return "redirect:/homepage";
+    }
 
 
+    @PostMapping("/home")
+    public String volverFromModal(@RequestParam("correo") String correo,RedirectAttributes attr){
+        attr.addFlashAttribute("correo",correo);
+        return "redirect:/homepage";
+    }
 
 
 
